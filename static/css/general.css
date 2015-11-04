@@ -30,3 +30,12 @@ Hack for responsive tables in firefox
 @-moz-document url-prefix() {
   fieldset { display: table-cell; }
 }
+
+
+/*
+at first hidden objects
+*/
+
+.hide_first {
+    display: None;
+}

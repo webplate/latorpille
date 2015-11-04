@@ -16,41 +16,29 @@
     <![endif]-->
     <link href="/static/css/general.css" rel="stylesheet">
     
-    <script src="/static/js/general.js"></script>
     <script src="/static/js/jquery.min.js"></script>
     <script src="/static/js/bootstrap.min.js"></script>
-<!--
-    Where is the site ?
--->
-    <script type="text/javascript">
-    $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
-    </script>
-<!--
-    Load content asynchronously
--->
-    <script type="text/javascript">
-      $(function() {
-        var submit_form = function(e) {
-          $.getJSON($SCRIPT_ROOT + '/_target', {
-            target_url: $('input[name="target_url"]').val(),
-          }, function(data) {
-            $('#show_url').text(data.target_url);
-            $('#information').text(data.info);
-            //~ $('input[name=target_url]').focus().select();
-          });
-          return false;
-        };
 
-        $('a#calculate').bind('click', submit_form);
-
-        $('input[name=target_url]').bind('keydown', function(e) {
-          if (e.keyCode == 13) {
+    <script src="/static/js/general.js"></script>
+    <script>
+        
+//Where is the site ?
+$SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+//when document is ready
+$(function() {
+    //bind form button to submit function
+    $('#send_target_url').bind('click', submit_form);
+    //bind enter key
+    $('input[name=target_url]').bind('keydown', function(e) {
+        if (e.keyCode == 13) {
             submit_form(e);
-          }
-        });
+        }
+    })
 
-        $('input[name=target_url]').focus();
-      });
+    //focus main input
+    $('input[name=target_url]').focus();
+});
+        
     </script>
 </head>
 <body>
@@ -65,18 +53,36 @@
     <div class="row">
     <h2>URL to target</h2>
     <p>
-        <label class="sr-only" for="new_user">URL :</label>
+        <label class="sr-only" for="target_url">URL :</label>
         <input class="form-control" type="text" name="target_url" id="target_url" placeholder="http://" maxlength="200" required/>
     </p>
 
-    <a href=# class="btn btn-primary" id="calculate">Send url</a>
+    <a href=# class="btn btn-primary" id="send_target_url">Send url</a>
     
     </form>
     </div>
     
     <div class="row">
-    <p id="show_url"></p>
-    <p id="information"></p>
+        <p id="spinner" class="hide_first">CRUNCH...CRUNCH</p>
+        <p id="bad_url" class="hide_first">No profile found at url : <span id="turl"></span></p>
+        <div id="information" class="hide_first">
+            <p><img id="tphoto"></p>
+            <p><span id="tname"></span>
+            on
+            <span id="tdomain"></span>
+            </p>
+            <p id="tcontact"></p>
+            
+        </div>
+        <div id="add_contact" class="hide_first">
+            <h2>Please add contact information :</h2>
+            <p>
+            <label class="sr-only" for="contact_info">Contact information:</label>
+            <input class="form-control" type="text" name="contact_info" id="contact_info" placeholder="phone, mail etc..." maxlength="200"/>
+            </p>
+
+            <a href=# class="btn btn-primary" id="send_contact_info">Send information</a>
+        </div>
     </div>
     
 
