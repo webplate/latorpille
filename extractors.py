@@ -100,7 +100,7 @@ def extract_profile(url, providers):
                 
     return None
 
-providers = [
+PROVIDERS = [
     {'domains': ['https://www.blablacar.fr'],
     'profile_urls': ['/membre/profil/'],
     'crawl_rules': [('/trajet-', ('.MemberCard-name a', 'href'))],
@@ -133,4 +133,4 @@ if __name__ == '__main__':
     #~ url = "https://www.blablacar.it/passaggio-milano-roma-303542203" #NOT WORKING!!??
     url = "https://www.blablacar.it/passaggio-milano-roma-307897569"
     from pprint import pprint 
-    pprint(extract_profile(url, providers))
+    pprint(extract_profile(url, PROVIDERS))
