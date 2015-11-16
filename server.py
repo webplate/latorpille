@@ -19,7 +19,7 @@ db = TinyDB(os.path.join(app_folder, 'static/data/db.json'))
 
 def get_matching(info, db):
     '''return list of matching profiles from db
-    TODO : sort it'''
+    TODO : sort it by relevance'''
     out = []
     s = db.search((where('name') == info['name'])
       & (where('profile_url') == info['profile_url']))
@@ -44,21 +44,15 @@ def target():
             # is this profile matching an item in db?
             matches = get_matching(info, db)
             if len(matches) > 0:
-                match = matches[0]
                 return jsonify(profile_found=True,
-                    target_url=target_url,
-                    name=match['name'],
-                    photo_url=match['photo_url'],
-                    domain=match['domain'],
                     contact_found=True,
-                    contact_info=match['contact_info'])
+                    target_url=target_url,
+                    matches=matches)
             else:
                 return jsonify(profile_found=True,
+                    contact_found=False,
                     target_url=target_url,
-                    name=info['name'],
-                    photo_url=info['photo_url'],
-                    domain=info['domain'],
-                    contact_found=False)
+                    matches=[info])
         else:
             return jsonify(profile_found=False,
                 target_url=target_url)

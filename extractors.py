@@ -14,7 +14,7 @@ def crop(doc, start='', end=''):
         cropped = cropped[:cropped.find(end)]
     if len(cropped) > 0:
         # and remove spaces
-        forbidden = [' ', '\n', '\t']
+        forbidden = [' ', '\n', '\t', '\xa0']
         while cropped[0] in forbidden:
             cropped = cropped[1:]
         while cropped[-1] in forbidden:
@@ -34,6 +34,13 @@ def find_crop_last(dom, selector, start, end):
     if out != None:
         out = out.html()
         out = crop(out, start, end)
+    return out
+
+def find_text(dom, selector):
+    out = dom.find(selector)
+    if out != None:
+        out = out.text()
+        out = crop(out)
     return out
 
 def is_url(text):
@@ -122,6 +129,28 @@ PROVIDERS = [
         'photo_url': ('.member-picture img', 'src'),
         'inscription_date': (find_crop_last, '.main-column-list li', 'Data d\'iscrizione:', '</li>')
         }
+    },
+    {'domains': ['https://www.airbnb.com'],
+    'profile_urls': ['/users/show/'],
+    'crawl_rules': [('/rooms/', ('div#host-profile a.media-photo', 'href'))],
+    'extract_rules': {
+        'name': ('div.col-lg-12 h1', 'Hey, I’m ', '!\n</h1>'),
+        'location': (find_text, 'div.row-space-top-2 a.link-reset'),
+        'work': ('div.panel-body dl dd', '<dd>', '</dd>'),
+        'photo_url': ('li.media-photo img', 'src'),
+        'inscription_date': ('div.row-space-top-2 span.text-normal', 'Member since', '</span>')
+        }
+    },
+    {'domains': ['https://www.airbnb.fr'],
+    'profile_urls': ['/users/show/'],
+    'crawl_rules': [('/rooms/', ('div#host-profile a.media-photo', 'href'))],
+    'extract_rules': {
+        'name': ('div.col-lg-12 h1', 'Bonjour, je m\'appelle', '!\n</h1>'),
+        'location': (find_text, 'div.row-space-top-2 a.link-reset'),
+        'work': ('div.panel-body dl dd', '<dd>', '</dd>'),
+        'photo_url': ('li.media-photo img', 'src'),
+        'inscription_date': ('div.row-space-top-2 span.text-normal', 'Membre depuis', '</span>')
+        }
     }
 ]
 
@@ -131,6 +160,10 @@ if __name__ == '__main__':
     #~ url = "https://www.blablacar.it/utente/visualizza/EjSwRuLOG69GXfzI-PGINw"
     #~ url = "https://www.blablacar.fr/trajet-paris-lyon-293845851"
     #~ url = "https://www.blablacar.it/passaggio-milano-roma-303542203" #NOT WORKING!!??
-    url = "https://www.blablacar.it/passaggio-milano-roma-307897569"
+    #~ url = "https://www.blablacar.it/passaggio-milano-roma-307897569"
+    #~ url = "https://www.airbnb.com/users/show/9993714"
+    #~ url = "https://www.airbnb.com/rooms/1930715?checkin=11%2F17%2F2015&checkout=11%2F18%2F2015&s=PYHhKEvX"
+    #~ url = "https://www.airbnb.com/rooms/8324971?checkin=11%2F17%2F2015&checkout=11%2F18%2F2015&s=PYHhKEvX"
+    url = "https://www.airbnb.fr/rooms/73128?s=QkSTTUX4#host-profile"
     from pprint import pprint 
     pprint(extract_profile(url, PROVIDERS))

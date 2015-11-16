@@ -3,22 +3,28 @@ function show_result(data) {
     //hide spinner
     $('#spinner').fadeOut("fast");
     if (data.profile_found) {
+        //hide error
+        $('#bad_url').fadeOut("fast");
+        
+        // select most relevant profile match
+        console.log(data.matches);
+        var main_match = data.matches[0];
+        
         //fill user id panel
-        $('#tname').text(data.name);
-        $('#tdomain').text(data.domain);
-        $('#tphoto').attr('src', data.photo_url);
+        $('#tname').text(main_match.name);
+        $('#tdomain').text(main_match.domain);
+        $('#tphoto').attr('src', main_match.photo_url);
         
         //is the profile associated with a contact?
         if (data.contact_found) {
-            $('#add_contact').fadeOut("fast");
-            $('#tcontact').text(data.contact_info)
+            $('#tcontact').text(main_match.contact_info)
             $('#tcontact_div').fadeIn("slow");
+            $('#add_contact').fadeIn("slow");
         } else {
             $('#add_contact').fadeIn("slow");
             $('#tcontact_div').fadeOut("fast");
         }
-        //hide error
-        $('#bad_url').fadeOut("fast");
+        
         //show user id panel
         $('#information').fadeIn("slow");
     }

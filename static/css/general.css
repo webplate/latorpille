@@ -39,3 +39,8 @@ at first hidden objects
 .hide_first {
     display: None;
 }
+
+
+#tphoto {
+    width: 100px;
+}
